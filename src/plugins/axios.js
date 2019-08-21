@@ -1,12 +1,13 @@
 "use strict";
 
-import Vue from 'vue';
+import Vue from "vue";
 import axios from "axios";
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.common["Authorization"] =
+  "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkMjU1M2VlMWYxMGM0MGJjYmI3MDAzMjMzNDgxNjUwMyIsImlhdCI6MTU2NTcwNjk4MiwiZXhwIjoxODgxMDY2OTgyfQ.9b_dxQ49Id7lq3dnqKBqT8y0ygFcPCCCrRVT9zAxj9I";
+axios.defaults.headers.post["Content-Type"] = "application/json";
 
 let config = {
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
@@ -52,10 +53,10 @@ Plugin.install = function(Vue, options) {
       get() {
         return _axios;
       }
-    },
+    }
   });
 };
 
-Vue.use(Plugin)
+Vue.use(Plugin);
 
 export default Plugin;

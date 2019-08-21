@@ -9,9 +9,18 @@
 
 <script>
 import TempChart from "@/components/charts/TempChart";
+import { mapActions } from "vuex";
 export default {
+  methods: {
+    ...mapActions({
+      initStates: "initStates"
+    })
+  },
   components: {
     TempChart
+  },
+  beforeMount() {
+    this.initStates();
   }
 };
 </script>
