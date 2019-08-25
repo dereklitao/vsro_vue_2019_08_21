@@ -19,7 +19,7 @@ export default {
   components: {
     TempChart
   },
-  beforeMount() {
+  created() {
     this.initStates();
   }
 };

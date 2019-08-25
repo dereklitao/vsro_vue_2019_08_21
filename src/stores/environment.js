@@ -5,7 +5,7 @@ const state = {
   tempDatas: [{ t: moment(), y: 0.5 }, { t: moment(), y: 1 }],
   humiDatas: [{ t: moment(), y: 0.5 }, { t: moment(), y: 1 }],
   hchoDatas: [{ t: moment(), y: 0.5 }, { t: moment(), y: 1 }],
-  pm1Datas: [{ t: moment(), y: 0.5 }, { t: moment(), y: 1 }],
+  pm1Datas: [],
   pm25Datas: [{ t: moment(), y: 0.5 }, { t: moment(), y: 1 }],
   pm10Datas: [{ t: moment(), y: 0.5 }, { t: moment(), y: 1 }]
 };
@@ -31,12 +31,10 @@ const actions = {
   },
   pm1GetHistory({ commit }, entityid) {
     const starttime =
-      "/history/period/" +
+      "/api/history/period/" +
       moment()
-        .subtract(600, "seconds")
+        .subtract(5, "minutes")
         .format("YYYY-MM-DDTHH:mm:ssZ");
-    console.log(starttime);
-
     const config = {
       url: starttime,
       params: {
@@ -47,13 +45,38 @@ const actions = {
       commit("pm1GetHistory", response.data[0]);
     });
   },
-  pm25GetHistory({ commit }, history) {
-    commit("pm25GetHistory", history);
+  pm25GetHistory({ commit }, entityid) {
+    const starttime =
+      "/api/history/period/" +
+      moment()
+        .subtract(5, "minutes")
+        .format("YYYY-MM-DDTHH:mm:ssZ");
+    const config = {
+      url: starttime,
+      params: {
+        filter_entity_id: entityid
+      }
+    };
+    Vue.axios.request(config).then(response => {
+      commit("pm25GetHistory", response.data[0]);
+    });
   },
-  pm10GetHistory({ commit }, history) {
-    commit("pm10GetHistory", history);
+  pm10GetHistory({ commit }, entityid) {
+    const starttime =
+      "/api/history/period/" +
+      moment()
+        .subtract(5, "minutes")
+        .format("YYYY-MM-DDTHH:mm:ssZ");
+    const config = {
+      url: starttime,
+      params: {
+        filter_entity_id: entityid
+      }
+    };
+    Vue.axios.request(config).then(response => {
+      commit("pm10GetHistory", response.data[0]);
+    });
   },
-
   tempGetNewValue({ commit }, val) {
     commit("tempGetNewValue", val);
   },
@@ -85,23 +108,23 @@ const mutations = {
     console.log(state, history);
   },
   pm1GetHistory(state, data) {
-    state.tempDatas = [];
-    console.log(data);
     data.forEach(point => {
-      const newdata = {
-        t: point.last_changed,
-        y: point.state
-      };
-      state.tempDatas.push(newdata);
+      const newdata = [point.last_changed, point.state];
+      state.pm1Datas.push(newdata);
     });
   },
-  pm25GetHistory(state, history) {
-    console.log(state, history);
+  pm25GetHistory(state, data) {
+    data.forEach(point => {
+      const newdata = [point.last_changed, point.state];
+      state.pm25Datas.push(newdata);
+    });
   },
-  pm10GetHistory(state, history) {
-    console.log(state, history);
+  pm10GetHistory(state, data) {
+    data.forEach(point => {
+      const newdata = [point.last_changed, point.state];
+      state.pm10Datas.push(newdata);
+    });
   },
-
   tempGetNewValue(state, val) {
     console.log(state, val);
   },
@@ -112,7 +135,9 @@ const mutations = {
     console.log(state, val);
   },
   pm1GetNewValue(state, val) {
-    console.log(state, val);
+    console.log(val);
+    const newdata = [val.new_state.last_changed, val.new_state.state];
+    state.pm1Datas.push(newdata);
   },
   pm25GetNewValue(state, val) {
     console.log(state, val);

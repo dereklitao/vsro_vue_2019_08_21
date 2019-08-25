@@ -1,4 +1,5 @@
 import Vue from "vue";
+import store from "@/store";
 
 const api_token =
   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIyOTAyOGU5ZTZiNzE0NzNjYTYwMzMwM2JiZTlhMTFlNSIsImlhdCI6MTU2NTYxODc4OCwiZXhwIjoxODgwOTc4Nzg4fQ.k1yq_MQfSyy2GV_5lcuFDn3PH5bw4NRuvydFijRXfbQ";
@@ -78,7 +79,9 @@ const mutations = {
         event_type: "state_changed"
       });
     } else if (message.type == "event" && message.id == 1) {
-      console.log(message.event.data.entity_id);
+      if (message.event.data.entity_id.indexOf("sensor.airmon_pm1_") === 0) {
+        store.commit("pm1GetNewValue", message.event.data);
+      }
     }
   },
   SOCKET_RECONNECT(state, count) {

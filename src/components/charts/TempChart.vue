@@ -1,24 +1,41 @@
 <template>
-  <v-card width="400px" height="300px">
-    <apexchart type="area" width="400" height="300" :options="chartOptions" :series="series" />
+  <v-card width="800px" height="300px">
+    <apexchart type="area" width="800" height="300" :options="chartOptions" :series="series" />
   </v-card>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import { truncate } from "fs";
 export default {
+  computed: {
+    ...mapGetters({
+      pm1Datas: "pm1Datas",
+      pm25Datas: "pm25Datas",
+      pm10Datas: "pm10Datas"
+    }),
+    series() {
+      console.log("updated!");
+      return [
+        { name: "PM1.0", data: this.pm1Datas },
+        { name: "PM2.5", data: this.pm25Datas },
+        { name: "PM10", data: this.pm10Datas }
+      ];
+    }
+  },
   data() {
     return {
-      series: [
-        {
-          name: "series1",
-          data: [31, 40, 28, 51, 42, 109, 100]
-        },
-        {
-          name: "series2",
-          data: [11, 32, 45, 32, 34, 52, 41]
-        }
-      ],
       chartOptions: {
+        chart: {
+          toolbar: {
+            show: false
+          },
+          animations: {
+            enabled: false,
+            easing: "easeinout",
+            speed: 50
+          }
+        },
         dataLabels: {
           enabled: false
         },
@@ -27,20 +44,13 @@ export default {
         },
         xaxis: {
           type: "datetime",
-          categories: [
-            "2018-09-19T00:00:00",
-            "2018-09-19T01:30:00",
-            "2018-09-19T02:30:00",
-            "2018-09-19T03:30:00",
-            "2018-09-19T04:30:00",
-            "2018-09-19T05:30:00",
-            "2018-09-19T06:30:00"
-          ]
+          tickAmount: 20
         },
-        tooltip: { x: { format: "dd/MM/yy HH:mm" } }
+        tooltip: { x: { format: "HH:mm:ss" } }
       }
     };
-  }
+  },
+  created() {}
 };
 </script>
 
