@@ -13,7 +13,7 @@
       </v-toolbar-title>
     </v-toolbar>
     <v-flex align-center pa-0>
-      <apexchart type="area" width="380" height="200" :options="chartOptions" :series="series" />
+      <apexchart type="area" width="375" height="200" :options="chartOptions" :series="series" />
     </v-flex>
   </v-card>
 </template>
