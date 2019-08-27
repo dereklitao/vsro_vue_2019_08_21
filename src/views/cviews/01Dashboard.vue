@@ -1,14 +1,27 @@
 <template>
   <v-container grid-list-lg>
-    <v-layout row></v-layout>
-    <v-flex shrink>
-      <TempChart></TempChart>
-    </v-flex>
+    <v-layout row>
+      <v-flex shrink>
+        <TempChart></TempChart>
+      </v-flex>
+      <v-flex shrink>
+        <HumiChart></HumiChart>
+      </v-flex>
+      <v-flex shrink>
+        <HchoChart></HchoChart>
+      </v-flex>
+      <v-flex shrink>
+        <PmChart></PmChart>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
 <script>
 import TempChart from "@/components/charts/TempChart";
+import HumiChart from "@/components/charts/HumiChart";
+import HchoChart from "@/components/charts/HchoChart";
+import PmChart from "@/components/charts/PmChart";
 import { mapActions } from "vuex";
 export default {
   methods: {
@@ -17,7 +30,10 @@ export default {
     })
   },
   components: {
-    TempChart
+    TempChart,
+    HumiChart,
+    HchoChart,
+    PmChart
   },
   created() {
     this.initStates();

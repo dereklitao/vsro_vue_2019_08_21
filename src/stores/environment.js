@@ -1,13 +1,22 @@
 import Vue from "vue";
 import moment from "moment";
 
+function getStartTimeURL() {
+  return (
+    "/api/history/period/" +
+    moment()
+      .subtract(12, "hours")
+      .format("YYYY-MM-DDTHH:mm:ssZ")
+  );
+}
+
 const state = {
-  tempDatas: [{ t: moment(), y: 0.5 }, { t: moment(), y: 1 }],
-  humiDatas: [{ t: moment(), y: 0.5 }, { t: moment(), y: 1 }],
-  hchoDatas: [{ t: moment(), y: 0.5 }, { t: moment(), y: 1 }],
+  tempDatas: [],
+  humiDatas: [],
+  hchoDatas: [],
   pm1Datas: [],
-  pm25Datas: [{ t: moment(), y: 0.5 }, { t: moment(), y: 1 }],
-  pm10Datas: [{ t: moment(), y: 0.5 }, { t: moment(), y: 1 }]
+  pm25Datas: [],
+  pm10Datas: []
 };
 
 const getters = {
@@ -20,130 +29,228 @@ const getters = {
 };
 
 const actions = {
-  tempGetHistory({ commit }, history) {
-    commit("tempGetHistory", history);
+  tempGetHistory({ commit }, entityid) {
+    Vue.axios
+      .request({
+        url: getStartTimeURL(),
+        params: { filter_entity_id: entityid }
+      })
+      .then(response => {
+        commit("tempGetHistory", response.data[0]);
+      });
   },
-  humiGetHistory({ commit }, history) {
-    commit("humiGetHistory", history);
+
+  humiGetHistory({ commit }, entityid) {
+    Vue.axios
+      .request({
+        url: getStartTimeURL(),
+        params: { filter_entity_id: entityid }
+      })
+      .then(response => {
+        commit("humiGetHistory", response.data[0]);
+      });
   },
-  hchoGetHistory({ commit }, history) {
-    commit("hchoGetHistory", history);
+
+  hchoGetHistory({ commit }, entityid) {
+    Vue.axios
+      .request({
+        url: getStartTimeURL(),
+        params: { filter_entity_id: entityid }
+      })
+      .then(response => {
+        commit("hchoGetHistory", response.data[0]);
+      });
   },
   pm1GetHistory({ commit }, entityid) {
-    const starttime =
-      "/api/history/period/" +
-      moment()
-        .subtract(5, "minutes")
-        .format("YYYY-MM-DDTHH:mm:ssZ");
-    const config = {
-      url: starttime,
-      params: {
-        filter_entity_id: entityid
-      }
-    };
-    Vue.axios.request(config).then(response => {
-      commit("pm1GetHistory", response.data[0]);
-    });
+    Vue.axios
+      .request({
+        url: getStartTimeURL(),
+        params: { filter_entity_id: entityid }
+      })
+      .then(response => {
+        commit("pm1GetHistory", response.data[0]);
+      });
   },
+
   pm25GetHistory({ commit }, entityid) {
-    const starttime =
-      "/api/history/period/" +
-      moment()
-        .subtract(5, "minutes")
-        .format("YYYY-MM-DDTHH:mm:ssZ");
-    const config = {
-      url: starttime,
-      params: {
-        filter_entity_id: entityid
-      }
-    };
-    Vue.axios.request(config).then(response => {
-      commit("pm25GetHistory", response.data[0]);
-    });
+    Vue.axios
+      .request({
+        url: getStartTimeURL(),
+        params: { filter_entity_id: entityid }
+      })
+      .then(response => {
+        commit("pm25GetHistory", response.data[0]);
+      });
   },
+
   pm10GetHistory({ commit }, entityid) {
-    const starttime =
-      "/api/history/period/" +
-      moment()
-        .subtract(5, "minutes")
-        .format("YYYY-MM-DDTHH:mm:ssZ");
-    const config = {
-      url: starttime,
-      params: {
-        filter_entity_id: entityid
-      }
-    };
-    Vue.axios.request(config).then(response => {
-      commit("pm10GetHistory", response.data[0]);
-    });
-  },
-  tempGetNewValue({ commit }, val) {
-    commit("tempGetNewValue", val);
-  },
-  humiGetNewValue({ commit }, val) {
-    commit("humiGetNewValue", val);
-  },
-  hchoGetNewValue({ commit }, val) {
-    commit("hchoGetNewValue", val);
-  },
-  pm1GetNewValue({ commit }, val) {
-    commit("pm1GetNewValue", val);
-  },
-  pm25GetNewValue({ commit }, val) {
-    commit("pm25GetNewValue", val);
-  },
-  pm10GetNewValue({ commit }, val) {
-    commit("pm10GetNewValue", val);
+    Vue.axios
+      .request({
+        url: getStartTimeURL(),
+        params: { filter_entity_id: entityid }
+      })
+      .then(response => {
+        commit("pm10GetHistory", response.data[0]);
+      });
   }
 };
 
 const mutations = {
-  tempGetHistory(state, history) {
-    console.log(state, history);
+  tempGetHistory(state, data) {
+    data.forEach(point => {
+      if (state.tempDatas.length === 0) {
+        state.tempDatas.push([point.last_changed, point.state]);
+      } else {
+        const timediff = moment(point.last_changed).diff(
+          moment(state.tempDatas[state.tempDatas.length - 1][0])
+        );
+        if (timediff >= 60000) {
+          state.tempDatas.push([point.last_changed, point.state]);
+        }
+      }
+    });
   },
-  humiGetHistory(state, history) {
-    console.log(state, history);
+  humiGetHistory(state, data) {
+    data.forEach(point => {
+      if (state.humiDatas.length === 0) {
+        state.humiDatas.push([point.last_changed, point.state]);
+      } else {
+        const timediff = moment(point.last_changed).diff(
+          moment(state.humiDatas[state.humiDatas.length - 1][0])
+        );
+        if (timediff >= 60000) {
+          state.humiDatas.push([point.last_changed, point.state]);
+        }
+      }
+    });
   },
-  hchoGetHistory(state, history) {
-    console.log(state, history);
+  hchoGetHistory(state, data) {
+    data.forEach(point => {
+      if (state.hchoDatas.length === 0) {
+        state.hchoDatas.push([point.last_changed, point.state]);
+      } else {
+        const timediff = moment(point.last_changed).diff(
+          moment(state.hchoDatas[state.hchoDatas.length - 1][0])
+        );
+        if (timediff >= 60000) {
+          state.hchoDatas.push([point.last_changed, point.state]);
+        }
+      }
+    });
   },
   pm1GetHistory(state, data) {
     data.forEach(point => {
-      const newdata = [point.last_changed, point.state];
-      state.pm1Datas.push(newdata);
+      if (state.pm1Datas.length === 0) {
+        state.pm1Datas.push([point.last_changed, point.state]);
+      } else {
+        const timediff = moment(point.last_changed).diff(
+          moment(state.pm1Datas[state.pm1Datas.length - 1][0])
+        );
+        if (timediff >= 60000) {
+          state.pm1Datas.push([point.last_changed, point.state]);
+        }
+      }
     });
   },
   pm25GetHistory(state, data) {
     data.forEach(point => {
-      const newdata = [point.last_changed, point.state];
-      state.pm25Datas.push(newdata);
+      if (state.pm25Datas.length === 0) {
+        state.pm25Datas.push([point.last_changed, point.state]);
+      } else {
+        const timediff = moment(point.last_changed).diff(
+          moment(state.pm25Datas[state.pm25Datas.length - 1][0])
+        );
+        if (timediff >= 60000) {
+          state.pm25Datas.push([point.last_changed, point.state]);
+        }
+      }
     });
   },
   pm10GetHistory(state, data) {
     data.forEach(point => {
-      const newdata = [point.last_changed, point.state];
-      state.pm10Datas.push(newdata);
+      if (state.pm10Datas.length === 0) {
+        state.pm10Datas.push([point.last_changed, point.state]);
+      } else {
+        const timediff = moment(point.last_changed).diff(
+          moment(state.pm10Datas[state.pm10Datas.length - 1][0])
+        );
+        if (timediff >= 60000) {
+          state.pm10Datas.push([point.last_changed, point.state]);
+        }
+      }
     });
   },
-  tempGetNewValue(state, val) {
-    console.log(state, val);
+  tempGetNewValue(state, newval) {
+    if (state.tempDatas.length === 0) {
+      state.tempDatas.push([newval.last_changed, newval.state]);
+    } else {
+      const timediff = moment(newval.last_changed).diff(
+        moment(state.tempDatas[state.tempDatas.length - 1][0])
+      );
+      if (timediff >= 60000) {
+        state.tempDatas.push([newval.last_changed, newval.state]);
+      }
+    }
   },
-  humiGetNewValue(state, val) {
-    console.log(state, val);
+  humiGetNewValue(state, newval) {
+    if (state.humiDatas.length === 0) {
+      state.humiDatas.push([newval.last_changed, newval.state]);
+    } else {
+      const timediff = moment(newval.last_changed).diff(
+        moment(state.humiDatas[state.humiDatas.length - 1][0])
+      );
+      if (timediff >= 60000) {
+        state.humiDatas.push([newval.last_changed, newval.state]);
+      }
+    }
   },
-  hchoGetNewValue(state, val) {
-    console.log(state, val);
+  hchoGetNewValue(state, newval) {
+    if (state.hchoDatas.length === 0) {
+      state.hchoDatas.push([newval.last_changed, newval.state]);
+    } else {
+      const timediff = moment(newval.last_changed).diff(
+        moment(state.hchoDatas[state.hchoDatas.length - 1][0])
+      );
+      if (timediff >= 60000) {
+        state.hchoDatas.push([newval.last_changed, newval.state]);
+      }
+    }
   },
-  pm1GetNewValue(state, val) {
-    console.log(val);
-    const newdata = [val.new_state.last_changed, val.new_state.state];
-    state.pm1Datas.push(newdata);
+  pm1GetNewValue(state, newval) {
+    if (state.pm1Datas.length === 0) {
+      state.pm1Datas.push([newval.last_changed, newval.state]);
+    } else {
+      const timediff = moment(newval.last_changed).diff(
+        moment(state.pm1Datas[state.pm1Datas.length - 1][0])
+      );
+      if (timediff >= 60000) {
+        state.pm1Datas.push([newval.last_changed, newval.state]);
+      }
+    }
   },
-  pm25GetNewValue(state, val) {
-    console.log(state, val);
+  pm25GetNewValue(state, newval) {
+    if (state.pm25Datas.length === 0) {
+      state.pm25Datas.push([newval.last_changed, newval.state]);
+    } else {
+      const timediff = moment(newval.last_changed).diff(
+        moment(state.pm25Datas[state.pm25Datas.length - 1][0])
+      );
+      if (timediff >= 60000) {
+        state.pm25Datas.push([newval.last_changed, newval.state]);
+      }
+    }
   },
-  pm10GetNewValue(state, val) {
-    console.log(state, val);
+  pm10GetNewValue(state, newval) {
+    if (state.pm10Datas.length === 0) {
+      state.pm10Datas.push([newval.last_changed, newval.state]);
+    } else {
+      const timediff = moment(newval.last_changed).diff(
+        moment(state.pm10Datas[state.pm10Datas.length - 1][0])
+      );
+      if (timediff >= 60000) {
+        state.pm10Datas.push([newval.last_changed, newval.state]);
+      }
+    }
   }
 };
 

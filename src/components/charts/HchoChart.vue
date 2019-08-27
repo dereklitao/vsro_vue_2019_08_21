@@ -1,15 +1,15 @@
 <template>
   <v-card width="390px" height="250px">
-    <v-toolbar flat dark dense elevation="2" color="rgba(0, 150, 136, 0.85)" height="48">
-      <v-icon dark large color>mdi-home-thermometer-outline</v-icon>
-      <v-toolbar-title>&nbsp温度</v-toolbar-title>
+    <v-toolbar flat dark dense elevation="2" color="#FF4560" height="48">
+      <v-icon dark large color>mdi-apache-kafka</v-icon>
+      <v-toolbar-title>&nbsp甲醛浓度</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-title>
         <span
-          v-if="tempDatas.length>0"
+          v-if="hchoDatas.length>0"
           class="headline font-weight-normal"
-        >{{tempDatas[tempDatas.length-1][1]}}</span>
-        <span class="title font-weight-thin">&nbsp℃</span>
+        >{{hchoDatas[hchoDatas.length-1][1]}}</span>
+        <span class="title font-weight-thin">&nbspmg/m³</span>
       </v-toolbar-title>
     </v-toolbar>
     <v-flex align-center pa-0>
@@ -23,14 +23,14 @@ import { mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters({
-      tempDatas: "tempDatas"
+      hchoDatas: "hchoDatas"
     }),
     series() {
-      return [{ name: "temp", data: this.tempDatas }];
+      return [{ name: "humi", data: this.hchoDatas }];
     },
     chartOptions() {
       return {
-        colors: ["#2E93fA"],
+        colors: ["#FF4560"],
         chart: {
           toolbar: {
             show: false
