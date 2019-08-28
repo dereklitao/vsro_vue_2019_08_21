@@ -2,12 +2,12 @@
   <v-app id="inspire">
     <v-navigation-drawer app clipped :value="leftDrawer">
       <v-container fill-height grid-list-lg>
-        <v-layout column color="primary">
+        <v-layout column color="primary" align-center>
           <v-flex shrink>
             <img width="200px" src="@/assets/logo-en.png" />
           </v-flex>
           <v-flex shrink pa-0>
-            <v-list two-line>
+            <v-list two-line width="280px">
               <v-list-item-group color="primary">
                 <DrawItem icon="mdi-view-dashboard" title="Dashboard" path="/"></DrawItem>
                 <DrawItem icon="mdi-home-city" title="Area & Room" path="/rooms"></DrawItem>
@@ -19,7 +19,7 @@
             </v-list>
           </v-flex>
           <v-flex shrink>
-            <v-card width="300" height="400px" flat></v-card>
+            <WeatherCardLeft></WeatherCardLeft>
           </v-flex>
         </v-layout>
       </v-container>
@@ -48,10 +48,12 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import DrawItem from "@/components/items/DrawItem";
+import WeatherCardLeft from "@/components/cards/WeatherCardLeft";
 export default {
   name: "App",
   components: {
-    DrawItem
+    DrawItem,
+    WeatherCardLeft
   },
   computed: {
     ...mapGetters({

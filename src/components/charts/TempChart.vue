@@ -30,7 +30,7 @@ export default {
     },
     chartOptions() {
       return {
-        colors: ["#2E93fA"],
+        colors: ["#26a69a"],
         chart: {
           toolbar: {
             show: false
