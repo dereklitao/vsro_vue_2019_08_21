@@ -5,7 +5,7 @@ function getStartTimeURL() {
   return (
     "/api/history/period/" +
     moment()
-      .subtract(6, "hours")
+      .subtract(12, "hours")
       .format("YYYY-MM-DDTHH:mm:ssZ")
   );
 }

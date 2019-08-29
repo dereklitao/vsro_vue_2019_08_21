@@ -14,6 +14,9 @@
         <PmChart></PmChart>
       </v-flex>
     </v-layout>
+    <v-layout row>
+      <DashDeviceCard></DashDeviceCard>
+    </v-layout>
   </v-container>
 </template>
 
@@ -22,6 +25,7 @@ import TempChart from "@/components/charts/TempChart";
 import HumiChart from "@/components/charts/HumiChart";
 import HchoChart from "@/components/charts/HchoChart";
 import PmChart from "@/components/charts/PmChart";
+import DashDeviceCard from "@/components/cards/DashDeviceCard";
 import { mapActions } from "vuex";
 export default {
   methods: {
@@ -33,7 +37,8 @@ export default {
     TempChart,
     HumiChart,
     HchoChart,
-    PmChart
+    PmChart,
+    DashDeviceCard
   },
   created() {
     this.initStates();

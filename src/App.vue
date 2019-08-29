@@ -1,13 +1,13 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer app clipped :value="leftDrawer">
-      <v-container fill-height grid-list-lg>
+      <v-container fill-height grid-list-md>
         <v-layout column color="primary" align-center>
           <v-flex shrink>
             <img width="200px" src="@/assets/logo-en.png" />
           </v-flex>
           <v-flex shrink pa-0>
-            <v-list two-line width="280px">
+            <v-list width="280px">
               <v-list-item-group color="primary">
                 <DrawItem icon="mdi-view-dashboard" title="Dashboard" path="/"></DrawItem>
                 <DrawItem icon="mdi-home-city" title="Area & Room" path="/rooms"></DrawItem>
@@ -18,7 +18,7 @@
               </v-list-item-group>
             </v-list>
           </v-flex>
-          <v-flex shrink>
+          <v-flex shrink pa-0>
             <WeatherCardLeft></WeatherCardLeft>
           </v-flex>
         </v-layout>
